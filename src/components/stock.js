@@ -39,8 +39,10 @@ class Stock extends Component {
             <div>
                 <CardIn
                     title = {this.title}
+                    currentPrice = {this.state.currentPrice}
+                    codePrice = {this.state.codePrice}
+                    description = {this.state.descriptionPrice}
                 />
-                <h2>{this.state.currentPrice} {this.state.codePrice}</h2>
             </div>
         )
     }

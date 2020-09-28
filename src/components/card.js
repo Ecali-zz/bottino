@@ -12,12 +12,10 @@ class CardIn extends Component{
                 <Card.Body>
                     <blockquote className="blockquote mb-0">
                     <p>
-                        {' '}
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere
-                        erat a ante.{' '}
+                        {this.props.currentPrice} {this.props.codePrice}
                     </p>
                     <footer className="blockquote-footer">
-                        Someone famous in <cite title="Source Title">Source Title</cite>
+                        Currency in  <cite title="Source Title">{this.props.description}</cite>
                     </footer>
                     </blockquote>
                 </Card.Body>
