@@ -8,15 +8,14 @@ class BuySell extends Component{
             btcBalance : this.props.btcBalance,
             importToSell : 0,
             importToBuy : 0,
-            buy : 'BUY',
-            sell : 'SELL',
+            buy : 'BUY BTC',
+            sell : 'SELL EUR',
             valueBuy : '',
             valueSell : '',
             buttonControl : ''
         }
         this.handleChange = this.handleChange.bind(this);
-        if(this.state.currencyBalance === '' || this.state.btcBalance === '')
-            this.getbalance();
+        this.getbalance();
     }
     getbalance = () =>{
         let data = localStorage.getItem('userData');
@@ -46,8 +45,14 @@ class BuySell extends Component{
     }
     mySubmitHandler = (event) => {
         event.preventDefault();
+        var localdata = localStorage.getItem('userData');
+        localdata = JSON.parse(localdata);
         if(this.state.buttonControl === this.state.buy ){
-            
+            var buyitat = this.state.valueBuy/localdata.currentbtc;
+            console.log('gigi ' + (buyitat).toFixed(6));
+            localdata.currencyBalance = localdata.currencyBalance - this.state.valueBuy;
+            localdata.btcBalance = localdata.btcBalance + buyitat;
+            localStorage.setItem('userData', JSON.stringify(localdata));
         }else{
 
         }

@@ -54,7 +54,11 @@ class Stock extends Component {
                     codePrice: price.code
                 });
                 console.log('rate : '+ this.state.currentPriceFloat);
-                console.log(price);
+                let localdata = localStorage.getItem('userData');
+                localdata = JSON.parse(localdata);
+                localdata.currentbtc = this.state.currentPriceFloat;
+                localStorage.setItem('userData', JSON.stringify(localdata));
+                console.log(localdata);
             })
             .catch(console.log)
 
