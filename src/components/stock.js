@@ -48,7 +48,7 @@ class Stock extends Component {
     }
     
     howManyBTC(){
-        return (this.balance / this.state.currentPriceFloat).toFixed(6);
+        return (this.balance / this.state.currentPriceFloat).toFixed(8);
     }
     fetchBTC(){
         const API_LINK = 'https://api.coindesk.com/v1/bpi/currentprice/EUR.json';
