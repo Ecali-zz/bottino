@@ -12,7 +12,7 @@ class Stock extends Component {
             currentPrice : '',
             currentPriceFloat : 0,
             descriptionPrice: '',
-            codePrice: ''
+            codePrice: '',
         }
         this.btcCode = 'BTC'
         this.titleBit = 'VALORE ATTUALE DEI BITCOIN';
@@ -20,12 +20,23 @@ class Stock extends Component {
         this.titleOrder = 'PLACE ORDER';
 
         this.text = '';
-        this.balance = 35;
-        this.bitcoinBalance = 0.00035;
+        this.balance = '';
+        this.bitcoinBalance = '';
     }
     componentDidMount(){
         this.fetchBTC();
+        this.getData();
     }
+    getData = () =>{
+        let data = localStorage.getItem('userData');
+        data = JSON.parse(data);
+        this.balance = data.currencyBalance;
+        this.bitcoinBalance  = data.btcBalance;
+        console.log('cb : ' + this.balance);
+        console.log('bb : ' + this.bitcoinBalance);
+
+    }
+    
     howManyBTC(){
         return (this.balance / this.state.currentPriceFloat).toFixed(6);
     }

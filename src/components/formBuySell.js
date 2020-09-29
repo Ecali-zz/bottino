@@ -15,6 +15,15 @@ class BuySell extends Component{
             buttonControl : ''
         }
         this.handleChange = this.handleChange.bind(this);
+        if(this.state.currencyBalance === '' || this.state.btcBalance === '')
+            this.getbalance();
+    }
+    getbalance = () =>{
+        let data = localStorage.getItem('userData');
+        data = JSON.parse(data);
+
+        this.state.btcBalance  = data.btcBalance;
+        this.state.currencyBalance = data.currencyBalance;
     }
     handleChange(e) {
         if(e.target.id === 'buy'){
@@ -38,7 +47,7 @@ class BuySell extends Component{
     mySubmitHandler = (event) => {
         event.preventDefault();
         if(this.state.buttonControl === this.state.buy ){
-        
+            
         }else{
 
         }
