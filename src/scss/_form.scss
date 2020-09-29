@@ -1,0 +1,10 @@
+.buyorsell{
+    text-align: center;
+    &__col{
+        padding: 0 0.53rem !important;
+    }
+    &__bott{
+        margin-top: 1rem;
+        width: 100%;
+    }
+}

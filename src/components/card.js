@@ -4,6 +4,14 @@ import {Card} from 'react-bootstrap';
 class CardIn extends Component{
     constructor(props){
         super(props);
+        this.thereAreDesc = this.thereAreDesc.bind(this);
+    }
+    thereAreDesc(){
+        if(this.props.description != null){
+            return (
+                ` Currency in ${this.props.description}` 
+            );
+        }
     }
     render(){
         return(
@@ -12,10 +20,12 @@ class CardIn extends Component{
                 <Card.Body>
                     <blockquote className="blockquote mb-0">
                     <p>
-                        {this.props.currentPrice} {this.props.codePrice}
+                        {this.props.text}
+                        <br />
+                        {this.props.text2}
                     </p>
                     <footer className="blockquote-footer">
-                        Currency in  <cite title="Source Title">{this.props.description}</cite>
+                        {this.thereAreDesc()}
                     </footer>
                     </blockquote>
                 </Card.Body>

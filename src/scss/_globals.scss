@@ -12,3 +12,12 @@ body{
   background-color: $darkgrey !important;
   color: white !important;
 }
+.main-container{
+  padding-top: 3.75rem;
+}
+.main-container .col{
+  padding-top: 1.75rem;
+}
+.col{
+  padding: 0 1.75rem;
+}
