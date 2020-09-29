@@ -2,10 +2,12 @@ import React, { Component } from 'react'
 import CardIn from './card';
 import BuySell from './formBuySell';
 import {Container, Row, Col} from 'react-bootstrap';
+import Store from '../js/Store';
 class Stock extends Component {
 
     constructor(props){
         super(props);
+        window.$balance = 34;
         this.state = {
             currentPrice : '',
             currentPriceFloat : 0,
@@ -18,7 +20,7 @@ class Stock extends Component {
         this.titleOrder = 'PLACE ORDER';
 
         this.text = '';
-        this.balance = 35
+        this.balance = 35;
         this.bitcoinBalance = 0.00035;
     }
     componentDidMount(){
@@ -50,35 +52,41 @@ class Stock extends Component {
         this.text = this.state.currentPrice +' '+ this.state.codePrice;
         //this.bitcoinBalance = this.howManyBTC();
         return (
-            <Container className='main-container'>
-                <Row>
-                    <Col className='col-sm-8'>
-                        <CardIn
-                        title = {this.titleBit}
-                        text = {this.text}
-                        description = {this.state.descriptionPrice}
-                        />
-                    </Col>
-                    <Col>
-                        <CardIn
-                        title = {this.titleBalance}
-                        text = {this.balance + ' '+ this.state.codePrice}
-                        text2 = {this.bitcoinBalance + ' '+ this.btcCode}
-                        />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col className='col-sm-8' >
+            <Store>
+                <Container className='main-container'>
+                    <Row>
+                        <Col className='col-sm-8'>
+                            <CardIn
+                            title = {this.titleBit}
+                            text = {this.text}
+                            description = {this.state.descriptionPrice}
+                            />
+                        </Col>
+                        <Col>
+                            <CardIn
+                            title = {this.titleBalance}
+                            text = {this.balance + ' '+ this.state.codePrice}
+                            text2 = {this.bitcoinBalance + ' '+ this.btcCode}
+                            />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col className='col-sm-8' >
 
-                    </Col>
-                    <Col>
-                        <CardIn 
-                        title = {this.titleOrder}
-                        text= {<BuySell/>}
-                        />
-                    </Col>
-                </Row>
-            </Container>
+                        </Col>
+                        <Col>
+                            <CardIn 
+                            title = {this.titleOrder}
+                            text= {<BuySell
+                                currencyBalance = {this.balance}
+                                btcBalance = {this.bitcoinBalance}
+                            />}
+                            />
+                        </Col>
+                    </Row>
+                </Container>
+            </Store>
+            
         )
     }
 }
