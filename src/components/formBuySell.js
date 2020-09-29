@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import {Form, FormControl, Row, Col, Button} from 'react-bootstrap';
+import firebase from '../util/fire';
+
 class BuySell extends Component{
     constructor(props){
         super(props);
         this.state = {
             currencyBalance : this.props.currencyBalance,
             btcBalance : this.props.btcBalance,
+            currentV : '',
             importToSell : 0,
             importToBuy : 0,
             buy : 'BUY BTC',
@@ -43,19 +46,52 @@ class BuySell extends Component{
         }
         return str + ' ' + this.state.importToBuy;
     }
+    getcurrencyvalue = () => {
+        var localdata = firebase.database().ref('balance').child('current');
+        localdata.on('value', snap =>{
+            this.setState({
+                currentV : (snap.val()).toFixed(6)
+            })
+            return true;
+        })
+
+    }
     mySubmitHandler = (event) => {
         event.preventDefault();
-        var localdata = localStorage.getItem('userData');
-        localdata = JSON.parse(localdata);
-        if(this.state.buttonControl === this.state.buy ){
-            var buyitat = this.state.valueBuy/localdata.currentbtc;
-            console.log('gigi ' + (buyitat).toFixed(6));
-            localdata.currencyBalance = localdata.currencyBalance - this.state.valueBuy;
-            localdata.btcBalance = localdata.btcBalance + buyitat;
-            localStorage.setItem('userData', JSON.stringify(localdata));
+        this.getcurrencyvalue();
+        if(this.state.currentV > 0){
+            if(this.state.buttonControl === this.state.buy ){
+                var currencyBalance = this.state.currencyBalance - this.state.valueBuy;
+                var buyitat = this.state.valueBuy/this.state.currentV;
+                this.setState({
+                    currencyBalance : currencyBalance
+                });
+                var btcBalance = this.state.btcBalance + buyitat;
+                this.setState({
+                    btcBalance : btcBalance
+                });
+                firebase.database().ref('balance').child('currency').set(currencyBalance);
+                firebase.database().ref('balance').child('btc').set(btcBalance);
+            }else{
+
+                var buyit = this.state.btcBalance - this.state.valueSell;
+                var eurplus = this.state.valueSell * this.state.currentV;
+                var eurt = this.state.currencyBalance + eurplus;
+                this.setState({
+                    currencyBalance : eurt
+                })
+                this.setState({
+                    btcBalance : buyit
+                })
+                firebase.database().ref('balance').child('currency').set(this.state.currencyBalance);
+                firebase.database().ref('balance').child('btc').set(this.state.buyit);
+
+            }
         }else{
+            this.getcurrencyvalue();
 
         }
+        
       }
     render(){
         return(

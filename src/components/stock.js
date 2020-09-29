@@ -2,17 +2,18 @@ import React, { Component } from 'react'
 import CardIn from './card';
 import BuySell from './formBuySell';
 import {Container, Row, Col} from 'react-bootstrap';
-import Store from '../js/Store';
+import firebase from '../util/fire';
 class Stock extends Component {
 
     constructor(props){
         super(props);
-        window.$balance = 34;
         this.state = {
             currentPrice : '',
             currentPriceFloat : 0,
             descriptionPrice: '',
             codePrice: '',
+            balance : '',
+            bitcoinBalance : ''
         }
         this.btcCode = 'BTC'
         this.titleBit = 'VALORE ATTUALE DEI BITCOIN';
@@ -20,21 +21,30 @@ class Stock extends Component {
         this.titleOrder = 'PLACE ORDER';
 
         this.text = '';
-        this.balance = '';
-        this.bitcoinBalance = '';
+        
+        this.database = {
+            btc: '',
+            currency : ''
+        }
     }
     componentDidMount(){
-        this.fetchBTC();
         this.getData();
+        this.fetchBTC();
     }
     getData = () =>{
-        let data = localStorage.getItem('userData');
-        data = JSON.parse(data);
-        this.balance = data.currencyBalance;
-        this.bitcoinBalance  = data.btcBalance;
-        console.log('cb : ' + this.balance);
-        console.log('bb : ' + this.bitcoinBalance);
+        this.database.btc = firebase.database().ref('balance').child('btc');
+        this.database.currency = firebase.database().ref('balance').child('currency');
 
+        this.database.btc.on('value', snap =>{
+            this.setState({
+                bitcoinBalance: (snap.val()).toFixed(6)
+            });
+        })
+        this.database.currency.on('value', snap =>{
+            this.setState({
+                balance: snap.val()
+            });
+         })
     }
     
     howManyBTC(){
@@ -53,6 +63,7 @@ class Stock extends Component {
                     descriptionPrice : price.description,
                     codePrice: price.code
                 });
+                firebase.database().ref('balance').child('current').set(this.state.currentPriceFloat);
                 console.log('rate : '+ this.state.currentPriceFloat);
                 let localdata = localStorage.getItem('userData');
                 localdata = JSON.parse(localdata);
@@ -67,7 +78,6 @@ class Stock extends Component {
         this.text = this.state.currentPrice +' '+ this.state.codePrice;
         //this.bitcoinBalance = this.howManyBTC();
         return (
-            <Store>
                 <Container className='main-container'>
                     <Row>
                         <Col className='col-sm-8'>
@@ -80,8 +90,8 @@ class Stock extends Component {
                         <Col>
                             <CardIn
                             title = {this.titleBalance}
-                            text = {this.balance + ' '+ this.state.codePrice}
-                            text2 = {this.bitcoinBalance + ' '+ this.btcCode}
+                            text = {this.state.balance + ' '+ this.state.codePrice}
+                            text2 = {this.state.bitcoinBalance + ' '+ this.btcCode}
                             />
                         </Col>
                     </Row>
@@ -100,7 +110,6 @@ class Stock extends Component {
                         </Col>
                     </Row>
                 </Container>
-            </Store>
             
         )
     }
