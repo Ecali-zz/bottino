@@ -89,16 +89,23 @@ class LevelBuilder extends Component{
         }
      }
 
-     setbtcValue = () =>{
+     setbtcValue = (e) =>{
         const API_LINK = 'https://api.coindesk.com/v1/bpi/currentprice/EUR.json';
-
+        var name = e.target.name;
         fetch(API_LINK)
             .then(res => res.json())
             .then(data => {
                 let price = data.bpi.EUR;
-                this.setState({
-                    imputOne : price.rate_float
-                });
+                if(name === 'imputOne'){
+                    this.setState({
+                        imputOne : price.rate_float
+                    });
+                }else{
+                    this.setState({
+                        imputTwo : price.rate_float
+                    });
+                }
+                
             })
             .catch(console.log)
      }
@@ -109,7 +116,7 @@ class LevelBuilder extends Component{
                 <Form>
                 <Accordion defaultActiveKey="0">
                     <Card>
-                        <Accordion.Toggle as={Card.Header} eventKey="1">
+                        <Accordion.Toggle as={Card.Header} eventKey="1" variant='warning'>
                         SET LEVELS
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="1">
@@ -172,7 +179,8 @@ class LevelBuilder extends Component{
                                     <InputGroup.Append>
                                     <Button 
                                         variant="outline-warning"
-                                        onClick = {this.setbtcValue}
+                                        name ='imputOne'
+                                        onClick = {this.setbtcValue.bind(this)}
                                     >
                                         BTC V
                                     </Button>
@@ -180,23 +188,26 @@ class LevelBuilder extends Component{
                             </InputGroup>
                         </Col>
                         <Col>
-                            <FormControl 
-                                type='number'
-                                placeholder="Second Level" 
-                                value ={this.state.imputTwo} 
-                                name ='imputTwo' 
-                                onChange={this.handleChange.bind(this)}
-                                required
-                            />
-                        </Col>
-                        <Col>
-                            <FormControl 
-                                placeholder="Third Level" 
-                                value ={this.state.imputThree} 
-                                name ='imputThree'
-                                onChange={this.handleChange.bind(this)}
-                                disabled
-                            />
+                        <InputGroup className="mb-3">
+                                    <FormControl 
+                                            type='number'
+                                            placeholder="Second Level" 
+                                            value ={this.state.imputTwo} 
+                                            name ='imputTwo' 
+                                            onChange={this.handleChange.bind(this)}
+                                            required
+                                        />
+                                    <InputGroup.Append>
+                                    <Button 
+                                        variant="outline-warning"
+                                        name = 'imputTwo'
+                                        onClick = {this.setbtcValue.bind(this)}
+                                    >
+                                        BTC V
+                                    </Button>
+                                </InputGroup.Append>
+                            </InputGroup>
+                            
                         </Col>
                     </Form.Row>
                     <Form.Row>
