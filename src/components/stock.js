@@ -3,6 +3,7 @@ import CardIn from './card';
 import BuySell from './formBuySell';
 import {Container, Row, Col} from 'react-bootstrap';
 import firebase from '../util/fire';
+import LeverBuilder from './createlevel';
 class Stock extends Component {
 
     constructor(props){
@@ -19,6 +20,7 @@ class Stock extends Component {
         this.titleBit = 'VALORE ATTUALE DEI BITCOIN';
         this.titleBalance = 'IL TUO BILANCIO';
         this.titleOrder = 'PLACE ORDER';
+        this.titleLevel = 'LEVER BUILDER';
 
         this.text = '';
         
@@ -37,7 +39,7 @@ class Stock extends Component {
 
         this.database.btc.on('value', snap =>{
             this.setState({
-                bitcoinBalance: (snap.val()).toFixed(6)
+                bitcoinBalance: (snap.val()).toFixed(8)
             });
         })
         this.database.currency.on('value', snap =>{
@@ -48,7 +50,7 @@ class Stock extends Component {
     }
     
     howManyBTC(){
-        return (this.balance / this.state.currentPriceFloat).toFixed(6);
+        return (this.balance / this.state.currentPriceFloat).toFixed(8);
     }
     fetchBTC(){
         const API_LINK = 'https://api.coindesk.com/v1/bpi/currentprice/EUR.json';
@@ -76,7 +78,6 @@ class Stock extends Component {
     }
     render() {
         this.text = this.state.currentPrice +' '+ this.state.codePrice;
-        //this.bitcoinBalance = this.howManyBTC();
         return (
                 <Container className='main-container'>
                     <Row>
@@ -97,7 +98,10 @@ class Stock extends Component {
                     </Row>
                     <Row>
                         <Col className='col-sm-8' >
-
+                            <CardIn
+                                title = {this.titleLevel}
+                                text = {<LeverBuilder />}
+                            />
                         </Col>
                         <Col>
                             <CardIn 

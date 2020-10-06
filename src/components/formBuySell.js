@@ -15,7 +15,8 @@ class BuySell extends Component{
             sell : 'SELL EUR',
             valueBuy : '',
             valueSell : '',
-            buttonControl : ''
+            buttonControl : '',
+            buttonState : 'disable'
         }
         this.handleChange = this.handleChange.bind(this);
         this.getbalance();
@@ -50,7 +51,7 @@ class BuySell extends Component{
         var localdata = firebase.database().ref('balance').child('current');
         localdata.on('value', snap =>{
             this.setState({
-                currentV : (snap.val()).toFixed(6)
+                currentV : (snap.val()).toFixed(8)
             })
             return true;
         })
@@ -58,18 +59,20 @@ class BuySell extends Component{
     }
     mySubmitHandler = (event) => {
         event.preventDefault();
-        this.getcurrencyvalue();
+        if(this.getcurrencyvalue())
+            this.setState({
+                buttonState : ''
+            })
         if(this.state.currentV > 0){
             if(this.state.buttonControl === this.state.buy ){
                 var currencyBalance = this.state.currencyBalance - this.state.valueBuy;
                 var buyitat = this.state.valueBuy/this.state.currentV;
-                this.setState({
-                    currencyBalance : currencyBalance
-                });
                 var btcBalance = this.state.btcBalance + buyitat;
                 this.setState({
+                    currencyBalance : currencyBalance,
                     btcBalance : btcBalance
                 });
+
                 firebase.database().ref('balance').child('currency').set(currencyBalance);
                 firebase.database().ref('balance').child('btc').set(btcBalance);
             }else{
@@ -78,9 +81,7 @@ class BuySell extends Component{
                 var eurplus = this.state.valueSell * this.state.currentV;
                 var eurt = this.state.currencyBalance + eurplus;
                 this.setState({
-                    currencyBalance : eurt
-                })
-                this.setState({
+                    currencyBalance : eurt,
                     btcBalance : buyit
                 })
                 firebase.database().ref('balance').child('currency').set(this.state.currencyBalance);
@@ -112,6 +113,7 @@ class BuySell extends Component{
                     type='submit'
                     className='buyorsell__bott'
                     variant='success'
+                    {... this.state.buttonState}
                     onClick={() => {
                         this.setState({ buttonControl: this.state.buy });
                       }}
@@ -133,6 +135,7 @@ class BuySell extends Component{
                     type='submit'
                     className='buyorsell__bott'
                     variant='danger'
+                    {... this.state.buttonState}
                     onClick={() => {
                         this.setState({ buttonControl: this.state.sell });
                       }}
